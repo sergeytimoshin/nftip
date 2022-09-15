@@ -1,0 +1,25 @@
+{
+  "name": "erc721-rent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "TS_NODE_TRANSPILE_ONLY=1 npx hardhat test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mirrorai/ERC721-Rent.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mirrorai/ERC721-Rent/issues"
+  },
+  "homepage": "https://github.com/mirrorai/ERC721-Rent#readme",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+    "@openzeppelin/contracts": "^4.7.0",
+    "ethers": "^5.6.9",
+    "hardhat": "^2.10.1"
+  }
+}
