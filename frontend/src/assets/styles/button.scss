@@ -1,0 +1,32 @@
+@import "./variables.scss";
+
+.button {
+  display: inline-flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  padding: 0 30px;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: $base-font;
+
+  &:hover {
+  }
+  &:disabled {
+    pointer-events: none;
+  }
+}
+
+.buttonTransparent {
+  background-color: transparent;
+  color: #fff;
+  border: 2px solid rgba(73, 78, 91, 0.5);
+
+  &:hover {
+    background-color: $color-orange;
+    border-color: $color-orange;
+  }
+}
