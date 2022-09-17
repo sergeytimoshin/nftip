@@ -1,0 +1,12 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.cardsGrid {
+  max-width: 1184px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-gap: 40px;
+}

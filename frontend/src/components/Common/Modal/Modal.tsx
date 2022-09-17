@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./Modal.module.scss";
-import closeIcon from "../../assets/icons/close.svg";
+import closeIcon from "../../../assets/icons/close.svg";
 
 type Props = {
   children: React.ReactNode;

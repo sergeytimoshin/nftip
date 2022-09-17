@@ -1,7 +1,7 @@
-$border-gray: #31343f;
+@import "../../../assets/styles/variables.scss";
 
 .userAccount {
-  border: 2px solid $border-gray;
+  border: 2px solid $color-dark-gray;
   border-radius: 12px;
   position: relative;
   cursor: pointer;
@@ -14,5 +14,5 @@ $border-gray: #31343f;
 
 .walletIcon {
   padding: 8px;
-  border-right: 2px solid $border-gray;
+  border-right: 2px solid $color-dark-gray;
 }

@@ -1,0 +1,69 @@
+@import "../../../assets/styles/variables.scss";
+
+.card {
+}
+
+.picture {
+  position: relative;
+  display: flex;
+  padding: 20px;
+  background-color: $color-dark-gray;
+  border-radius: 12px;
+  justify-content: center;
+
+  .image {
+    height: 300px;
+  }
+
+  .tooltip {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 5px 10px;
+    background-color: $color-green;
+    border-radius: 6px;
+  }
+}
+
+.info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+
+  .row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .number {
+    padding: 3px 5px;
+    background-color: $color-dark-gray;
+    font-size: 0.75rem;
+    border-radius: 4px;
+  }
+
+  .name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .eth {
+    white-space: nowrap;
+    border: 2px solid $color-dark-gray;
+    padding: 3px 7px;
+    border-radius: 6px;
+  }
+
+  .converted {
+    color: $color-gray;
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+}

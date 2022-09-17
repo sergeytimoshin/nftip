@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUserAccountNumber } from "../../../modules/user.slice";
-import { Modal } from "../../Modal/Modal";
+import { Modal } from "../../Common/Modal/Modal";
 import styles from "./ConnectWallet.module.scss";
 import metaMaskIcon from "../../../assets/icons/fox.svg";
 

@@ -40,7 +40,7 @@ export const useWalletIsConnected = (accountNumber) => {
     }
 
     fetchBookList();
-  }, [accountNumber]);
+  }, [accountNumber, dispatch]);
 
   return [loading];
 };
