@@ -13,13 +13,9 @@ contract TestERC721 is ERC721 {
     constructor() ERC721("Test", "TST") {}
 
     function mint(address to) external returns (uint256) {
-        uint256 newItemId = _tokenIds.current() + 1;
-        _safeMint(to, newItemId);
         _tokenIds.increment();
+        uint256 newItemId = _tokenIds.current();
+        _mint(to, newItemId);
         return newItemId;
-    }
-
-    function currentTokenId() external view returns (uint256) {
-        return _tokenIds.current();
     }
 }
