@@ -23,8 +23,6 @@ export const UserNFTs: FC = () => {
     getNFTs(walletAddress);
   }, [walletAddress]);
 
-  console.log(nfts);
-
   return (
     <div className={styles.wrapper}>
       <div className={styles.cardsGrid}>

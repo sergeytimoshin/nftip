@@ -1,0 +1,39 @@
+.rentStep {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nftImage {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 1.25rem;
+  color: #fff;
+  line-height: 1.75rem;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.moneyInput {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.moneyInputAdditionalInfo {
+  font-size: 0.75rem;
+  color: #7f8596;
+  margin-top: 20px;
+  text-align: center;
+  line-height: 1rem;
+}
+
+.checkboxes {
+  margin-bottom: 32px;
+}

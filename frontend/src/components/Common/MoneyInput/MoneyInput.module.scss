@@ -1,0 +1,39 @@
+@import "../../../assets/styles/variables.scss";
+
+.moneyInput {
+  position: relative;
+  border: 2px solid $color-dark-gray;
+  padding: 14px;
+  font-size: 1.5rem;
+  border-radius: 6px;
+  font-weight: 700;
+  padding-right: 160px;
+
+  .input {
+    border: none;
+    background-color: transparent;
+    color: #fff;
+    width: 100%;
+
+    &:hover,
+    &:focus {
+      outline: none;
+      border-color: $color-orange;
+    }
+  }
+
+  .currency {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    display: flex;
+    color: #627eea;
+    font-size: 1.5rem;
+    font-weight: 700;
+    transform: translateY(-50%);
+
+    .currencyIcon {
+      padding: 0 16px;
+    }
+  }
+}

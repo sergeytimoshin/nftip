@@ -17,6 +17,8 @@ $base-dark-color: #1f2128;
   background-color: $base-dark-color;
   border-radius: 12px;
   position: relative;
+  min-width: 400px;
+  max-width: 420px;
 }
 
 .closeBtn {
