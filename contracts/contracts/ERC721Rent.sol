@@ -10,31 +10,36 @@ import "./Interfaces.sol";
 
 contract ERC721Rent is ERC721, IERC721Rent {
     using Counters for Counters.Counter;
-    
+
+
+    event DisputeSettled(uint256 tokenId, bool rentIsValid);
+
     Counters.Counter private _tokenIds;
 
     // Source contract addr => Source token id => ...
     mapping(address => mapping(uint256 => RentConditions)) private _rentConditions;
     mapping(address => mapping(uint256 => uint256)) private _currentRentingToken;
 
+    // Balances availible for withdrawal
+    mapping(address => uint256) private _balances;
+
     // tokenID => token data
     mapping(uint256 => Rent) private _tokenData;
     
-    constructor() ERC721("ERC721Wrapper", "ECW") {}
+    // Dispute resolver
+    IDisputeResolver _resolver;
+
+    constructor(address resolver) ERC721("ERC721Wrapper", "ECW") {
+        _resolver = IDisputeResolver(resolver);
+    }
 
     // allow rent for an owned token
-    function allowRent(
-        IERC721 erc721Contract, 
-        uint256 tokenId, 
-        bool allow, 
-        uint256 pricePerSecond, 
-        IDisputeResolver resolver
-        ) external {
+    function allowRent(IERC721 erc721Contract, uint256 tokenId, bool allow, uint256 pricePerSecond, uint256 collateralPerSecond) external {
         // TODO: Check approval as well
         require(erc721Contract.ownerOf(tokenId) == msg.sender, "not owner");
         require(_currentRentingToken[address(erc721Contract)][tokenId] == 0, "cant change while rented");
         
-        _rentConditions[address(erc721Contract)][tokenId] = RentConditions(allow, pricePerSecond, resolver);
+        _rentConditions[address(erc721Contract)][tokenId] = RentConditions(allow, pricePerSecond, collateralPerSecond);
     }
 
     // check if a specific token was added as rentable
@@ -52,27 +57,16 @@ contract ERC721Rent is ERC721, IERC721Rent {
         require(rentConditions.allowed == true, "cant rent this token");
         require(_currentRentingToken[address(erc721Contract)][tokenId] == 0, "already rented");
         uint256 price = duration * rentConditions.pricePerSecond;
-        require(msg.value >= price, "msg.value too low");
+        uint256 collateral = duration * rentConditions.collateralPerSecond;
+        require(msg.value >= price + collateral, "msg.value too low");
         
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
 
         // update state
-        Rent memory current = Rent(
-            block.timestamp,             // startTs
-            block.timestamp + duration,  // endTs
-            address(erc721Contract),     // sourceERC721Contract 
-            tokenId, 
-            false,                       // withdrawn
-            price, 
-            RentStatus.STARTED);
-
+        Rent memory current = Rent(block.timestamp, block.timestamp + duration, address(erc721Contract), tokenId, price, collateral, RentStatus.STARTED);
         _currentRentingToken[address(erc721Contract)][tokenId] = newItemId;
         _tokenData[newItemId] = current;
-
-        // Handle balance change
-        // ...
-
 
         // Mint token
         _mint(msg.sender, tokenId);
@@ -80,60 +74,63 @@ contract ERC721Rent is ERC721, IERC721Rent {
         return newItemId;
     }
 
+    // Commit rent and allow eth to be withdrawn by owner
+    function finalizeRent(uint256 tokenId) external {
+        Rent storage tokenData = _tokenData[tokenId];
+        require(tokenData.sourceERC721Contract != address(0), "token does not exist");
+        require(tokenData.status == RentStatus.STARTED, "already finished");
+        require(block.timestamp > tokenData.endTs, "rent not finished yet");
+
+        // anyone can finalize the rent
+        // address tokenOwner = ERC721(tokenData.sourceERC721Contract).ownerOf(tokenData.sourceTokenId);
+        // require(tokenOwner == msg.sender, "not owner");
+
+        tokenData.status = RentStatus.FINISHED;
+        _currentRentingToken[tokenData.sourceERC721Contract][tokenData.sourceTokenId] = 0;
+
+        address tokenOwner = ERC721(tokenData.sourceERC721Contract).ownerOf(tokenData.sourceTokenId);
+
+        _balances[tokenOwner] += tokenData.price;
+
+        // start rent validity dispute
+        _resolver.callDispute(tokenId);
+    }
+
+    // Designate collateral based on dispute resolution
+    function resolveDispute(uint256 tokenId) external {
+        Rent storage tokenData = _tokenData[tokenId];
+        require(tokenData.sourceERC721Contract != address(0), "token does not exist");
+        require(tokenData.status == RentStatus.FINISHED, "not in finished status");
+        
+        bool rentIsValid = _resolver.checkDispute(tokenId);
+        if (rentIsValid) {
+            address tokenRenter = ownerOf(tokenId);
+            _balances[tokenRenter] += tokenData.collateral;
+        } else {
+            address tokenOwner = ERC721(tokenData.sourceERC721Contract).ownerOf(tokenData.sourceTokenId);
+            _balances[tokenOwner] += tokenData.collateral;
+        }
+        emit DisputeSettled(tokenId, rentIsValid);
+
+        tokenData.status = RentStatus.COLLATERAL_ASSIGNED;
+    }
+
     // get metadata associated with a token
     function getTokenData(uint256 tokenId) external view returns (Rent memory) {
         return _tokenData[tokenId];
     }
-
-    // commit rent and allow eth to be withdrawn by owner
-    function finalizeRent(uint256 tokenId) external {
-        Rent storage tokenData = _tokenData[tokenId];
-        require(tokenData.sourceERC721Contract != address(0), "does not exist");
-        require(tokenData.status == RentStatus.STARTED, "already finished");
-        address tokenOwner = ERC721(tokenData.sourceERC721Contract).ownerOf(tokenData.sourceTokenId);
-        require(tokenOwner == msg.sender, "not owner");
-
-        tokenData.status = RentStatus.FINISHED;
-        _currentRentingToken[tokenData.sourceERC721Contract][tokenData.sourceTokenId] = 0;
-    }
     
-    function callDispute(uint256 tokenId) external {
-        Rent storage tokenData = _tokenData[tokenId];
-        require(tokenData.sourceERC721Contract != address(0), "does not exist");
-        require(tokenData.status == RentStatus.STARTED, "already finished");
-        address tokenOwner = ERC721(tokenData.sourceERC721Contract).ownerOf(tokenData.sourceTokenId);
-        require(tokenOwner == msg.sender, "not owner");
-
-        tokenData.status = RentStatus.DISPUTE;
-        _currentRentingToken[tokenData.sourceERC721Contract][tokenData.sourceTokenId] = 0;
-        _rentConditions[tokenData.sourceERC721Contract][tokenData.sourceTokenId].resolver.callDispute(tokenId);
+    // check current balance
+    function getBalance() external view returns (uint256) {
+        return _balances[msg.sender];
     }
 
-    function resolveDispute(uint256 tokenId, bool ok) external {
-        Rent storage tokenData = _tokenData[tokenId];
-        require(tokenData.sourceERC721Contract != address(0), "does not exist");
-        require(tokenData.status == RentStatus.DISPUTE, "not in dispute");
-
-        require(msg.sender == address(_rentConditions[tokenData.sourceERC721Contract][tokenData.sourceTokenId].resolver), "only resolver can resolve");
-
-        if (ok) {
-            tokenData.status = RentStatus.FINISHED;
-        } else {
-            tokenData.status = RentStatus.CANCELED;
-            _burn(tokenId); // should token be burnt or status change is enough?
-        }
-    }
-
-    function withdrawRent(uint256 tokenId) external {
-        Rent storage tokenData = _tokenData[tokenId];
-        require(tokenData.sourceERC721Contract != address(0), "does not exist");
-        require(tokenData.status == RentStatus.FINISHED, "not finished");
-        address tokenOwner = ERC721(tokenData.sourceERC721Contract).ownerOf(tokenData.sourceTokenId);
-        require(tokenOwner == msg.sender, "not owner");
-        require(tokenData.withdrawn == false, "already withdrawn");
-
-        tokenData.withdrawn = true;
-        bool sent =  payable(msg.sender).send(tokenData.price);
-        require(sent, "Failed to send ether");
+    // Withdraw credits
+    function withdraw() external {
+        require(_balances[msg.sender] > 0, "empty balance");
+        uint256 balance = _balances[msg.sender];
+        _balances[msg.sender] = 0;
+        bool sent = payable(msg.sender).send(balance);
+        require(sent, "failed to withdraw");
     }
 }
