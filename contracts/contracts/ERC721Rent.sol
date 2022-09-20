@@ -69,7 +69,7 @@ contract ERC721Rent is ERC721, IERC721Rent {
         _tokenData[newItemId] = current;
 
         // Mint token
-        _mint(msg.sender, tokenId);
+        _mint(msg.sender, newItemId);
 
         return newItemId;
     }

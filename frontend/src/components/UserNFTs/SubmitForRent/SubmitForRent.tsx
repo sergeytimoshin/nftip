@@ -1,4 +1,3 @@
-import { setPriority } from "os";
 import { useState } from "react";
 import { Modal } from "../../Common/Modal/Modal";
 import {
