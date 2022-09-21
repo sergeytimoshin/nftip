@@ -1,11 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { ERC721Rent__factory } from "../../../../typechain-types";
 import { ethProvider } from "../../../../utils/utils";
-import { SubmitForRentContext } from "../context/submitForRent.context";
+import { Checkbox } from "../../../Common/Checkbox/Checkbox";
+import { StopRentContext } from "../context/stopRent.context";
 import styles from "./ConfirmStep.module.scss";
 
 export const ConfirmStep = () => {
-  const { setStep, moneyValue, nft } = useContext(SubmitForRentContext);
+  const [firstCheck, setFirstCheck] = useState(false);
+  const { setStep, nft } = useContext(StopRentContext);
+
+  const checkboxHandler = () => {
+    setFirstCheck(!firstCheck);
+  };
   const nftName = nft.meta?.name;
 
   const confirmHandler = async () => {
@@ -14,27 +20,26 @@ export const ConfirmStep = () => {
       ethProvider.getSigner()
     );
 
-    // allow rent nft
-    const rentingTx = await contract.allowRent(
-      "0xC7E1ae0dA2fD67a4192560C709A8Ed33557e435a", //nft number
-      4, //id
-      true,
-      Number(moneyValue), //price
-      1 //collateral
-    );
+    // stop rent
+    const txFinalOfRent = await contract.finalizeRent(1); //arg: rentTokenId
+    await txFinalOfRent.wait();
+    console.log("txFinalOfRent", txFinalOfRent);
 
-    const rentingTxResult = await rentingTx.wait();
+    // resolivng disputes after rent
+    const txresolvedisput = await contract.resolveDispute(1); //arg rentTokenId
+    const result = await txresolvedisput.wait();
+    console.log("txresolvedisput", result);
 
-    console.log(rentingTxResult);
-
-    if (!rentingTxResult) {
+    if (!txresolvedisput) {
       setStep("success");
     }
   };
 
+  const moneyValue = 1;
+
   return (
     <div className={styles.step}>
-      <div className={styles.title}>Confirm Submition</div>
+      <div className={styles.title}>Stop Rent</div>
       <div className={styles.rentInfo}>
         <div className={styles.col}>
           <div className={styles.name}>{nftName}</div>
@@ -47,7 +52,16 @@ export const ConfirmStep = () => {
           </div>
         </div>
       </div>
-      <div className={styles.price}></div>
+
+      <div className={styles.checkboxes}>
+        <Checkbox
+          value={firstCheck}
+          label="You're stop you rental"
+          onChange={checkboxHandler}
+          id="agreement"
+          additionalText="Reantal agreement will be stopped"
+        />
+      </div>
 
       <button
         className="button buttonFullWidth buttonCta"

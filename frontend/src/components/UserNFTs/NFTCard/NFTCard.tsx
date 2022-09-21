@@ -7,6 +7,8 @@ export const NFTCard = ({ nft }) => {
   const nftName = nft.meta?.name;
   const [rentable, setRentable] = useState(true);
 
+  console.log(nft);
+
   return (
     <div className={styles.card}>
       <div className={styles.picture}>

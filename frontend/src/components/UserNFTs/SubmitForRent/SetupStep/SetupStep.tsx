@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Checkbox } from "../../../Common/Checkbox/Checkbox";
 import { MoneyInput } from "../../../Common/MoneyInput/MoneyInput";
 import styles from "./SetupStep.module.scss";
 import { ERC721Rent__factory } from "../../../../typechain-types";
 import { ethProvider } from "../../../../utils/utils";
+import { SubmitForRentContext } from "../context/submitForRent.context";
 
-export const SetupStep = ({ nft }) => {
-  const [moneyValue, setMoneyValue] = useState("");
+export const SetupStep = () => {
+  const { moneyValue, setMoneyValue, setStep, nft } =
+    useContext(SubmitForRentContext);
+
   const [firstCheck, setFirstCheck] = useState(false);
 
   const nftImageUrl = nft.meta?.content[0].url;
@@ -21,20 +24,21 @@ export const SetupStep = ({ nft }) => {
   };
 
   const buttonHandler = async () => {
-    const contract = await ERC721Rent__factory.connect(
-      "0x8236b943f7204Cc86aD56E216dEdcafE1e7C6B03",
-      ethProvider
-    );
+    // const contract = await ERC721Rent__factory.connect(
+    //   "0xa5a47bF5273dD40679C213C8A8939c5133A85635", // network address
+    //   ethProvider
+    // );
 
-    const transaction = await contract.allowRent(
-      "0xC7E1ae0dA2fD67a4192560C709A8Ed33557e435a",
-      2,
-      true,
-      1,
-      1
-    );
+    // const transaction = await contract.allowRent(
+    //   "0xC7E1ae0dA2fD67a4192560C709A8Ed33557e435a",
+    //   2,
+    //   true,
+    //   1,
+    //   1
+    // );
 
-    console.log(transaction);
+    // console.log(transaction);
+    setStep("confirm");
   };
 
   return (

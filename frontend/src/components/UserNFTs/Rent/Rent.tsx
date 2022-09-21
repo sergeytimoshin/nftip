@@ -1,17 +1,12 @@
 import { useState } from "react";
 import { Modal } from "../../Common/Modal/Modal";
 import { ConfirmStep } from "./ConfirmStep/ConfirmStep";
-import {
-  StepType,
-  SubmitForRentContext,
-} from "./context/submitForRent.context";
+import { StepType, RentContext } from "./context/rent.context";
 import { SetupStep } from "./SetupStep/SetupStep";
 import { SuccessStep } from "./SuccessStep/SuccessStep";
 
-export const SubmitForRent = ({ nft }) => {
+export const Rent = ({ nft }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [moneyValue, setMoneyValue] = useState("");
-
   const [step, setStep] = useState<StepType>("setup");
 
   const openConnectWalletModal = () => {
@@ -24,17 +19,15 @@ export const SubmitForRent = ({ nft }) => {
         className="button buttonCta buttonFullWidth"
         onClick={openConnectWalletModal}
       >
-        Submit For Rent
+        Rent Now
       </button>
 
       <Modal visible={openModal} onClose={() => setOpenModal(false)}>
-        <SubmitForRentContext.Provider
-          value={{ step, setStep, moneyValue, setMoneyValue, nft }}
-        >
+        <RentContext.Provider value={{ step, setStep, nft }}>
           {step == "setup" && <SetupStep />}
           {step == "confirm" && <ConfirmStep />}
           {step == "success" && <SuccessStep />}
-        </SubmitForRentContext.Provider>
+        </RentContext.Provider>
       </Modal>
     </>
   );

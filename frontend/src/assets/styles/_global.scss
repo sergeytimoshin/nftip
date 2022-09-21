@@ -75,3 +75,14 @@ a {
     color: lighten($color-orange, 15%);
   }
 }
+
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #a1a1a1;
+    border-radius: 20px;
+  }
+}
