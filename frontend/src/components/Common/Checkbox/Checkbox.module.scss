@@ -1,0 +1,61 @@
+@import "../../../assets/styles/variables.scss";
+
+.checkbox {
+  display: block;
+  margin-bottom: 15px;
+  position: relative;
+  padding-left: 60px;
+}
+
+.checkbox input {
+  padding: 0;
+  height: initial;
+  width: initial;
+  margin-bottom: 0;
+  display: none;
+  cursor: pointer;
+}
+
+.checkbox label {
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.checkbox label:before {
+  content: "";
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: 2px solid $color-dark-gray;
+  border-radius: 12px;
+  padding: 20px;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  vertical-align: middle;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.checkbox input:checked + label:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 22px;
+  height: 16px;
+  background-image: url("../../../assets/icons/check.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.checkbox input:checked + label:before {
+  background-color: $color-orange;
+}
+
+.additionalText {
+  margin-top: 5px;
+  font-size: 0.75rem;
+  color: $color-gray;
+}

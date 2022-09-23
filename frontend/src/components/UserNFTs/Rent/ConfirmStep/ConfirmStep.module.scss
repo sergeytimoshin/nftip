@@ -1,0 +1,49 @@
+@import "../../../../assets/styles/variables.scss";
+@import "../../../../assets/styles/global";
+
+.rentStep {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nftImage {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #fff;
+  line-height: 1.75rem;
+  text-align: center;
+  font-weight: 700;
+  flex-basis: 100%;
+}
+
+.subTitle {
+  color: $color-gray;
+  font-size: 1.25rem;
+  margin-bottom: 32px;
+  font-weight: 700;
+}
+
+.agreementText {
+  max-height: 300px;
+  overflow-y: scroll;
+  margin-bottom: 32px;
+  padding-right: 10px;
+
+  @include scrollbar;
+}
+
+.pdfLink {
+  margin-bottom: 32px;
+}
+
+.checkboxes {
+  margin-bottom: 16px;
+}

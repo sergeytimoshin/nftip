@@ -1,0 +1,37 @@
+@import "../../../../assets/styles/variables.scss";
+
+.account {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 20px;
+  border: 2px solid #31343f;
+  border-radius: 12px;
+  right: 0;
+  top: 130%;
+  min-width: 300px;
+}
+
+.accountNumber {
+  margin-bottom: 20px;
+  .title {
+    font-size: 0.75rem;
+    color: $color-gray;
+  }
+}
+
+.controls {
+  display: block;
+  width: 100%;
+
+  button {
+    width: 100%;
+  }
+}
+
+.link {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+  display: block;
+}
