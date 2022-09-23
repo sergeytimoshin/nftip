@@ -24,5 +24,9 @@ const config: HardhatUserConfig = {
 
 export default config;
 
-import "./tasks/TestERC721.mint";
-import "./tasks/ERC721Rent.allowRent";
+
+try {
+  require("./tasks")
+} catch (_) {
+  console.error("Failed to import tasks");
+}

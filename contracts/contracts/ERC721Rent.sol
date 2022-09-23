@@ -18,28 +18,41 @@ contract ERC721Rent is ERC721, IERC721Rent {
 
     // Source contract addr => Source token id => ...
     mapping(address => mapping(uint256 => RentConditions)) private _rentConditions;
-    mapping(address => mapping(uint256 => uint256)) private _currentRentingToken;
 
     // Balances availible for withdrawal
     mapping(address => uint256) private _balances;
 
     // tokenID => token data
     mapping(uint256 => Rent) private _tokenData;
+
+    // Iteration hacks
+    struct _SourceTokenId {
+        address contractAddress;
+        uint256 tokenId;
+    }
+    mapping(address => mapping(uint256 => uint256)) private _sourceTokenIdArrayPos;
+    _SourceTokenId[] private _sourceTokenIdArray;
+
     
     // Dispute resolver
     IDisputeResolver _resolver;
 
     constructor(address resolver) ERC721("ERC721Wrapper", "ECW") {
         _resolver = IDisputeResolver(resolver);
+        _tokenIds.increment();
     }
 
     // allow rent for an owned token
     function allowRent(IERC721 erc721Contract, uint256 tokenId, bool allow, uint256 pricePerSecond, uint256 collateralPerSecond) external {
         // TODO: Check approval as well
         require(erc721Contract.ownerOf(tokenId) == msg.sender, "not owner");
-        require(_currentRentingToken[address(erc721Contract)][tokenId] == 0, "cant change while rented");
+        require(_rentConditions[address(erc721Contract)][tokenId].currentRentingToken == 0, "cant change while rented");
         
-        _rentConditions[address(erc721Contract)][tokenId] = RentConditions(allow, pricePerSecond, collateralPerSecond);
+        _rentConditions[address(erc721Contract)][tokenId] = RentConditions(allow, pricePerSecond, collateralPerSecond, 0);
+        if (_sourceTokenIdArrayPos[address(erc721Contract)][tokenId] == 0) {
+            _sourceTokenIdArrayPos[address(erc721Contract)][tokenId] = _sourceTokenIdArray.length + 1;
+            _sourceTokenIdArray.push(_SourceTokenId(address(erc721Contract), tokenId));
+        }
     }
 
     // check if a specific token was added as rentable
@@ -55,7 +68,7 @@ contract ERC721Rent is ERC721, IERC721Rent {
         RentConditions storage rentConditions = _rentConditions[address(erc721Contract)][tokenId];
 
         require(rentConditions.allowed == true, "cant rent this token");
-        require(_currentRentingToken[address(erc721Contract)][tokenId] == 0, "already rented");
+        require(_rentConditions[address(erc721Contract)][tokenId].currentRentingToken == 0, "already rented");
         uint256 price = duration * rentConditions.pricePerSecond;
         uint256 collateral = duration * rentConditions.collateralPerSecond;
         require(msg.value >= price + collateral, "msg.value too low");
@@ -65,11 +78,11 @@ contract ERC721Rent is ERC721, IERC721Rent {
 
         // update state
         Rent memory current = Rent(block.timestamp, block.timestamp + duration, address(erc721Contract), tokenId, price, collateral, RentStatus.STARTED);
-        _currentRentingToken[address(erc721Contract)][tokenId] = newItemId;
+        _rentConditions[address(erc721Contract)][tokenId].currentRentingToken = newItemId;
         _tokenData[newItemId] = current;
 
         // Mint token
-        _mint(msg.sender, tokenId);
+        _mint(msg.sender, newItemId);
 
         return newItemId;
     }
@@ -86,7 +99,7 @@ contract ERC721Rent is ERC721, IERC721Rent {
         // require(tokenOwner == msg.sender, "not owner");
 
         tokenData.status = RentStatus.FINISHED;
-        _currentRentingToken[tokenData.sourceERC721Contract][tokenData.sourceTokenId] = 0;
+        _rentConditions[address(tokenData.sourceERC721Contract)][tokenData.sourceTokenId].currentRentingToken = 0;
 
         address tokenOwner = ERC721(tokenData.sourceERC721Contract).ownerOf(tokenData.sourceTokenId);
 
@@ -113,6 +126,18 @@ contract ERC721Rent is ERC721, IERC721Rent {
         emit DisputeSettled(tokenId, rentIsValid);
 
         tokenData.status = RentStatus.COLLATERAL_ASSIGNED;
+    }
+
+
+    // list rent conditions
+    function listRentConditions() external view returns (RentConditions[] memory) {
+        uint256 size = _sourceTokenIdArray.length;
+        RentConditions[] memory output = new RentConditions[](size);
+        for (uint256 i = 0; i < size; i++) {
+            _SourceTokenId storage addr = _sourceTokenIdArray[i];
+            output[i] = _rentConditions[addr.contractAddress][addr.tokenId];
+        }
+        return output;
     }
 
     // get metadata associated with a token

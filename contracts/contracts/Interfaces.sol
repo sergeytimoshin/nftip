@@ -9,6 +9,7 @@ interface IERC721Rent {
         bool            allowed;
         uint256         pricePerSecond;
         uint256         collateralPerSecond;
+        uint256         currentRentingToken;
     }
 
     enum RentStatus{ UNKNOWN, STARTED, FINISHED, COLLATERAL_ASSIGNED }
@@ -25,7 +26,8 @@ interface IERC721Rent {
 
     function getTokenData(uint256 tokenId) external view returns (Rent memory);
     function getRentConditions(IERC721 erc721Contract, uint256 tokenId) external view returns (RentConditions memory);
-
+    function listRentConditions() external view returns (RentConditions[] memory);
+    
     function allowRent(IERC721 erc721Contract, uint256 tokenId, bool allow, uint256 pricePerSecond, uint256 collateralPerSecond) external;
     function rent(IERC721 erc721Contract, uint256 tokenId, uint256 duration) external payable returns (uint256);
     function finalizeRent(uint256 tokenId) external;
