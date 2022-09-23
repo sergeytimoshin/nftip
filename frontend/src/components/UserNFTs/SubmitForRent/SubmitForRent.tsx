@@ -16,6 +16,7 @@ export const SubmitForRent = ({ nft }) => {
 
   const openConnectWalletModal = () => {
     setOpenModal(true);
+    setStep("setup");
   };
 
   return (

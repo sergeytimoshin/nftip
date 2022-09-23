@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { userAccountNumber } from "../../modules/selectors/user.selector";
 import { ethProvider } from "../../utils/utils";
+import { mockedNFTs } from "../NFTS_MOCK";
 import { NFTCard } from "./NFTCard/NFTCard";
 import styles from "./UserNFTs.module.scss";
 
@@ -18,7 +19,8 @@ export const UserNFTs: FC = () => {
 
     const data = await response.json();
 
-    setNfts(data.items);
+    // setNfts(data.items);
+    setNfts(mockedNFTs);
   };
 
   const getNFTContract = async () => {

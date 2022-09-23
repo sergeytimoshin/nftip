@@ -6,30 +6,35 @@ import styles from "./ConfirmStep.module.scss";
 
 export const ConfirmStep = () => {
   const { setStep, moneyValue, nft } = useContext(SubmitForRentContext);
-  const nftName = nft.meta?.name;
+
+  // const nftName = nft.meta?.name;
+
+  const { name: nftName } = nft;
 
   const confirmHandler = async () => {
-    const contract = await ERC721Rent__factory.connect(
-      "0xa5a47bF5273dD40679C213C8A8939c5133A85635",
-      ethProvider.getSigner()
-    );
+    // const contract = await ERC721Rent__factory.connect(
+    //   "0xa5a47bF5273dD40679C213C8A8939c5133A85635",
+    //   ethProvider.getSigner()
+    // );
 
-    // allow rent nft
-    const rentingTx = await contract.allowRent(
-      "0xC7E1ae0dA2fD67a4192560C709A8Ed33557e435a", //nft number
-      4, //id
-      true,
-      Number(moneyValue), //price
-      1 //collateral
-    );
+    // // allow rent nft
+    // const rentingTx = await contract.allowRent(
+    //   "0xC7E1ae0dA2fD67a4192560C709A8Ed33557e435a", //nft number
+    //   4, //id
+    //   true,
+    //   Number(moneyValue), //price
+    //   1 //collateral
+    // );
 
-    const rentingTxResult = await rentingTx.wait();
+    // const rentingTxResult = await rentingTx.wait();
 
-    console.log(rentingTxResult);
+    // console.log(rentingTxResult);
 
-    if (!rentingTxResult) {
-      setStep("success");
-    }
+    // if (!rentingTxResult) {
+    //   setStep("success");
+    // }
+
+    setStep("success");
   };
 
   return (

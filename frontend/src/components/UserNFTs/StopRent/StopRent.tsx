@@ -10,6 +10,7 @@ export const StopRent = ({ nft }) => {
 
   const openConnectWalletModal = () => {
     setOpenModal(true);
+    setStep("confirm");
   };
 
   return (

@@ -12,8 +12,10 @@ export const SetupStep = () => {
 
   const [firstCheck, setFirstCheck] = useState(false);
 
-  const nftImageUrl = nft.meta?.content[0].url;
-  const nftName = nft.meta?.name;
+  // const nftImageUrl = nft.meta?.content[0].url;
+  // const nftName = nft.meta?.name;
+
+  const { name: nftName, imgUrl: nftImageUrl } = nft;
 
   const moneyInputHandler = (e) => {
     setMoneyValue(e.target.value);

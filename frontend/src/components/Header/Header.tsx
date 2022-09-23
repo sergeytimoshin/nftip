@@ -17,62 +17,62 @@ export const Header: FC = () => {
   const accountNumber = useSelector(userAccountNumber);
   useWalletIsConnected(accountNumber);
 
-  const nftMock = {
-    id: "POLYGON:0x2953399124f0cbb46d2cbacd8a89cf0599974963:81717149829793910253025094003263137422701326667011376906265976729433395954164",
-    blockchain: "POLYGON",
-    collection: "POLYGON:0x2953399124f0cbb46d2cbacd8a89cf0599974963",
-    contract: "POLYGON:0x2953399124f0cbb46d2cbacd8a89cf0599974963",
-    tokenId:
-      "81717149829793910253025094003263137422701326667011376906265976729433395954164",
-    creators: [
-      {
-        account: "ETHEREUM:0xb4aa448ba7363dead79171244abf8328f2ae2a9c",
-        value: 10000,
-      },
-    ],
-    lazySupply: "0",
-    pending: [],
-    mintedAt: "2022-04-30T09:49:15.184Z",
-    lastUpdatedAt: "2022-04-30T09:49:15.184Z",
-    supply: "63",
-    meta: {
-      name: "Sad Binance Pepe",
-      description:
-        "We're all got that feeling. We're all have that sad days .Hi mister CZ!",
-      tags: [],
-      genres: [],
-      attributes: [
-        {
-          key: "Character",
-          value: "Pepe",
-        },
-        {
-          key: "Feeling",
-          value: "Sadness",
-        },
-      ],
-      content: [
-        {
-          "@type": "IMAGE",
-          url: "https://lh3.googleusercontent.com/BvDHeyXc0i987WIHDL9fc1ZYi-5RWGugNwdX0knavkpeFsHFlrycZVBuBq-jmuGyozN_EvttpMehc3BBk9y9cqEOxkoXCsKA5e_r9WU",
-          representation: "ORIGINAL",
-          mimeType: "image/png",
-          size: 19595,
-          width: 500,
-          height: 450,
-        },
-      ],
-      restrictions: [],
-    },
-    deleted: false,
-    originOrders: [],
-    ammOrders: {
-      ids: [],
-    },
-    auctions: [],
-    totalStock: "0",
-    sellers: 0,
-  };
+  // const nftMock = {
+  //   id: "POLYGON:0x2953399124f0cbb46d2cbacd8a89cf0599974963:81717149829793910253025094003263137422701326667011376906265976729433395954164",
+  //   blockchain: "POLYGON",
+  //   collection: "POLYGON:0x2953399124f0cbb46d2cbacd8a89cf0599974963",
+  //   contract: "POLYGON:0x2953399124f0cbb46d2cbacd8a89cf0599974963",
+  //   tokenId:
+  //     "81717149829793910253025094003263137422701326667011376906265976729433395954164",
+  //   creators: [
+  //     {
+  //       account: "ETHEREUM:0xb4aa448ba7363dead79171244abf8328f2ae2a9c",
+  //       value: 10000,
+  //     },
+  //   ],
+  //   lazySupply: "0",
+  //   pending: [],
+  //   mintedAt: "2022-04-30T09:49:15.184Z",
+  //   lastUpdatedAt: "2022-04-30T09:49:15.184Z",
+  //   supply: "63",
+  //   meta: {
+  //     name: "Sad Binance Pepe",
+  //     description:
+  //       "We're all got that feeling. We're all have that sad days .Hi mister CZ!",
+  //     tags: [],
+  //     genres: [],
+  //     attributes: [
+  //       {
+  //         key: "Character",
+  //         value: "Pepe",
+  //       },
+  //       {
+  //         key: "Feeling",
+  //         value: "Sadness",
+  //       },
+  //     ],
+  //     content: [
+  //       {
+  //         "@type": "IMAGE",
+  //         url: "https://lh3.googleusercontent.com/BvDHeyXc0i987WIHDL9fc1ZYi-5RWGugNwdX0knavkpeFsHFlrycZVBuBq-jmuGyozN_EvttpMehc3BBk9y9cqEOxkoXCsKA5e_r9WU",
+  //         representation: "ORIGINAL",
+  //         mimeType: "image/png",
+  //         size: 19595,
+  //         width: 500,
+  //         height: 450,
+  //       },
+  //     ],
+  //     restrictions: [],
+  //   },
+  //   deleted: false,
+  //   originOrders: [],
+  //   ammOrders: {
+  //     ids: [],
+  //   },
+  //   auctions: [],
+  //   totalStock: "0",
+  //   sellers: 0,
+  // };
 
   const buttonHandler = async () => {
     const contract = await ERC721Rent__factory.connect(
@@ -134,9 +134,9 @@ export const Header: FC = () => {
       >
         Continue
       </button> */}
-      <SubmitForRent nft={nftMock} />
+      {/* <SubmitForRent nft={nftMock} />
       <Rent nft={nftMock} />
-      <StopRent nft={nftMock} />
+      <StopRent nft={nftMock} /> */}
     </div>
   );
 };

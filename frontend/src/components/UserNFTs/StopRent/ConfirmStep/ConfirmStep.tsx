@@ -12,7 +12,9 @@ export const ConfirmStep = () => {
   const checkboxHandler = () => {
     setFirstCheck(!firstCheck);
   };
-  const nftName = nft.meta?.name;
+  // const nftName = nft.meta?.name;
+
+  const { name: nftName } = nft;
 
   const confirmHandler = async () => {
     const contract = await ERC721Rent__factory.connect(
@@ -56,7 +58,7 @@ export const ConfirmStep = () => {
       <div className={styles.checkboxes}>
         <Checkbox
           value={firstCheck}
-          label="You're stop you rental"
+          label="You're about to stop you rental"
           onChange={checkboxHandler}
           id="agreement"
           additionalText="Reantal agreement will be stopped"

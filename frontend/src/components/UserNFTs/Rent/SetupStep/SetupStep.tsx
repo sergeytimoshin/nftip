@@ -4,7 +4,9 @@ import styles from "./SetupStep.module.scss";
 
 export const SetupStep = () => {
   const { setStep, nft } = useContext(RentContext);
-  const nftName = nft.meta?.name;
+  // const nftName = nft.meta?.name;
+
+  const { name: nftName } = nft;
 
   const buttonHandler = async () => {
     setStep("confirm");
