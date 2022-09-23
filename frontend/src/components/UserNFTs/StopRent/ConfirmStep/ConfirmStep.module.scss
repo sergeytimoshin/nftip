@@ -1,0 +1,48 @@
+@import "../../../../assets/styles/variables.scss";
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.rentInfo {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 10px;
+  border-radius: 12px;
+  background-color: $color-dark-gray;
+  margin-bottom: 32px;
+
+  .col {
+    display: flex;
+    align-items: center;
+    flex-basis: 50%;
+    flex-wrap: wrap;
+  }
+
+  .name {
+    overflow: hidden;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  .eth {
+    font-size: 1.25rem;
+    color: $color-green;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .converted {
+    color: $color-gray;
+    text-align: right;
+  }
+}
+
+.additionalText {
+  font-size: 0.75rem;
+  margin-top: 16px;
+  text-align: center;
+  color: $color-gray;
+}

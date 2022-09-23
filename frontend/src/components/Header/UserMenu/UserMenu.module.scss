@@ -1,0 +1,18 @@
+@import "../../../assets/styles/variables.scss";
+
+.userAccount {
+  border: 2px solid $color-dark-gray;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.accountNumber {
+  display: flex;
+  justify-content: space-between;
+}
+
+.walletIcon {
+  padding: 8px;
+  border-right: 2px solid $color-dark-gray;
+}

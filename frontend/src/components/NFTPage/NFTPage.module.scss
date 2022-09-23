@@ -1,0 +1,59 @@
+@import "../../assets/styles/variables.scss";
+
+.container {
+  max-width: 1200px;
+  padding: 40px;
+  margin: 0 auto;
+  display: flex;
+}
+
+.image {
+  flex-basis: 50%;
+  padding-right: 40px;
+
+  img {
+    border-radius: 12px;
+  }
+}
+
+.info {
+  flex-basis: 50%;
+}
+
+.status {
+  display: flex;
+  margin-bottom: 32px;
+
+  .statusNumber {
+    padding: 5px 10px;
+    font-weight: 700;
+    border-radius: 6px;
+    background-color: darken($color-green, 20%);
+  }
+
+  .statusTooltip {
+    padding: 5px 10px;
+    font-weight: 700;
+    border-radius: 6px;
+    background-color: $color-green;
+    margin-left: 10px;
+  }
+}
+
+.title {
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.price {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: $color-green;
+}
+
+.convertedPrice {
+  color: $color-gray;
+  margin-bottom: 64px;
+}

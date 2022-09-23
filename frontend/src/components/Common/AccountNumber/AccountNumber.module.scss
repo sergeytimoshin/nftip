@@ -1,0 +1,21 @@
+@import "../../../assets/styles/variables.scss";
+
+.accountNumber {
+  position: relative;
+  padding: 8px;
+  margin-left: 20px;
+  color: $color-gray;
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: $color-green;
+    top: 50%;
+    left: -10px;
+    transform: translateY(-50%);
+  }
+}
