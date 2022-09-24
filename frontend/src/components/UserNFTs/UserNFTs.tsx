@@ -39,11 +39,15 @@ export const UserNFTs: FC = () => {
       return tokenIsOwned;
     });
 
-    const notOwnedAndAllowed = data2.filter((elem) => {
-      const tokenIsOwned = contract
+    const notOwnedAndAllowed = data2.filter(async (elem) => {
+      const tokenOwner = await contract
         .ownerOf(elem.currentRentingToken._hex)
-        .then();
-      return !tokenIsOwned;
+        .then((response) => response)
+        .then((ownerAddress) => {
+          return ownerAddress;
+        });
+
+      return tokenOwner === walletAddress;
     });
 
     setNfts(ownedAndRentable);

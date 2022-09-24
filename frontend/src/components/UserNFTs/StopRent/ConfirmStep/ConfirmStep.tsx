@@ -14,7 +14,7 @@ export const ConfirmStep = () => {
   };
   // const nftName = nft.meta?.name;
 
-  const { name: nftName } = nft;
+  const { name: nftName, id } = nft;
 
   const confirmHandler = async () => {
     const contract = await ERC721Rent__factory.connect(
@@ -23,16 +23,15 @@ export const ConfirmStep = () => {
     );
 
     // stop rent
-    const txFinalOfRent = await contract.finalizeRent(1); //arg: rentTokenId
-    await txFinalOfRent.wait();
-    console.log("txFinalOfRent", txFinalOfRent);
+    const txFinalOfRent = await contract.finalizeRent(id._hex); //arg: rentTokenId
+    const itsConfirmed = await txFinalOfRent.wait();
 
     // resolivng disputes after rent
-    const txresolvedisput = await contract.resolveDispute(1); //arg rentTokenId
-    const result = await txresolvedisput.wait();
-    console.log("txresolvedisput", result);
+    // const txresolvedisput = await contract.resolveDispute(1); //arg rentTokenId
+    // const result = await txresolvedisput.wait();
+    // console.log("txresolvedisput", result);
 
-    if (!txresolvedisput) {
+    if (!itsConfirmed) {
       setStep("success");
     }
   };
