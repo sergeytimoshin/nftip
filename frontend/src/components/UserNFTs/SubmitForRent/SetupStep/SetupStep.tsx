@@ -5,17 +5,21 @@ import styles from "./SetupStep.module.scss";
 import { ERC721Rent__factory } from "../../../../typechain-types";
 import { ethProvider } from "../../../../utils/utils";
 import { SubmitForRentContext } from "../context/submitForRent.context";
+import { useSelector } from "react-redux";
+import { userAccountNumber } from "../../../../modules/selectors/user.selector";
 
 export const SetupStep = () => {
   const { moneyValue, setMoneyValue, setStep, nft } =
     useContext(SubmitForRentContext);
+
+  const walletNumber = useSelector(userAccountNumber);
 
   const [firstCheck, setFirstCheck] = useState(false);
 
   // const nftImageUrl = nft.meta?.content[0].url;
   // const nftName = nft.meta?.name;
 
-  const { name: nftName, imgUrl: nftImageUrl } = nft;
+  const { name: nftName, uri: nftImageUrl, id } = nft;
 
   const moneyInputHandler = (e) => {
     setMoneyValue(e.target.value);
@@ -26,20 +30,6 @@ export const SetupStep = () => {
   };
 
   const buttonHandler = async () => {
-    // const contract = await ERC721Rent__factory.connect(
-    //   "0xa5a47bF5273dD40679C213C8A8939c5133A85635", // network address
-    //   ethProvider
-    // );
-
-    // const transaction = await contract.allowRent(
-    //   "0xC7E1ae0dA2fD67a4192560C709A8Ed33557e435a",
-    //   2,
-    //   true,
-    //   1,
-    //   1
-    // );
-
-    // console.log(transaction);
     setStep("confirm");
   };
 

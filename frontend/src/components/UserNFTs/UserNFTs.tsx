@@ -1,6 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { userAccountNumber } from "../../modules/selectors/user.selector";
+import {
+  ERC721Rent__factory,
+  TestERC721__factory,
+} from "../../typechain-types";
 import { ethProvider } from "../../utils/utils";
 import { mockedNFTs } from "../NFTS_MOCK";
 import { NFTCard } from "./NFTCard/NFTCard";
@@ -9,32 +13,33 @@ import styles from "./UserNFTs.module.scss";
 export const UserNFTs: FC = () => {
   const walletAddress = useSelector(userAccountNumber);
   const [nfts, setNfts] = useState([]);
+  const [rentedNfts, setRentedNfts] = useState([]);
 
   const getNFTs = async (walletAddress) => {
     if (!walletAddress) return;
 
-    const response = await fetch(
-      `https://api.rarible.org/v0.1/items/byOwner/?owner=ETHEREUM:${walletAddress}`
+    const contract = await TestERC721__factory.connect(
+      "0xA109c70f4094724932C45A00c7601eF008Eea0Da", // network address
+      ethProvider
     );
 
-    const data = await response.json();
+    const contract2 = await ERC721Rent__factory.connect(
+      "0x8Bd9665d182Daaad45eB321913E42c74CC4b7bdC",
+      ethProvider
+    );
 
-    // setNfts(data.items);
-    setNfts(mockedNFTs);
-  };
+    const transaction = await contract.listTokens();
+    const transaction2 = await contract2.listRentConditions();
 
-  const getNFTContract = async () => {
-    try {
-      const { ethereum } = window;
+    console.log();
 
-      if (!ethereum) {
-        return;
-      }
+    const data = await transaction;
+    const data2 = await transaction2;
 
-      const accounts = await ethProvider.send("eth_requestAccounts", []);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(data, data2);
+
+    setNfts(data);
+    setRentedNfts(data2);
   };
 
   useEffect(() => {
@@ -44,8 +49,11 @@ export const UserNFTs: FC = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.cardsGrid}>
+        {rentedNfts.map((nft) => {
+          return <NFTCard nft={nft} key={nft.id} status="rented" />;
+        })}
         {nfts.map((nft) => {
-          return <NFTCard nft={nft} key={nft.id} />;
+          return <NFTCard nft={nft} key={nft.id} status="rentable" />;
         })}
       </div>
     </div>

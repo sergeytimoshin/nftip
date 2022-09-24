@@ -8,7 +8,9 @@ import { ethProvider } from "../../../../utils/utils";
 
 export const ConfirmStep = () => {
   const [firstCheck, setFirstCheck] = useState(false);
-  const { setStep } = useContext(RentContext);
+  const { setStep, nft } = useContext(RentContext);
+
+  const { id } = nft;
 
   const checkboxHandler = () => {
     setFirstCheck(!firstCheck);
@@ -23,21 +25,19 @@ export const ConfirmStep = () => {
     // // approve rent nft
     const trans2 = await contract.rent(
       "0xC7E1ae0dA2fD67a4192560C709A8Ed33557e435a",
-      4, //tokenId
+      id._hex, //tokenId
       1, //time for rent
       { value: 2 } /*totalPrice = time*(price+collateral)*/
     );
 
     // result of nft renting
     const txRecite = await trans2.wait();
-    console.log("txRecite", txRecite);
+
     const event = (txRecite.events as Event[]).find(
       (event) => event.event === "Transfer"
     );
     const args = event.args;
     const rentTokenId = args[2];
-
-    console.log("rentTokenId", rentTokenId);
 
     if (!rentTokenId) {
       setStep("success");

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Rent } from "../Rent/Rent";
 import { SubmitForRent } from "../SubmitForRent/SubmitForRent";
 import styles from "./NFTCard.module.scss";
@@ -6,27 +6,30 @@ import cn from "classnames";
 import { generatePath, useNavigate } from "react-router-dom";
 import { id } from "ethers/lib/utils";
 
-export const NFTCard = ({ nft }) => {
-  // const nftImageUrl = nft.meta?.content[0].url;
-  // const nftName = nft.meta?.name;
-  // const [rentable, setRentable] = useState(true);
+interface Props {
+  nft: any;
+  status: string;
+}
 
-  const nftImageUrl = nft.imgUrl;
+export const NFTCard: FC<Props> = ({ nft, status }) => {
+  // const nftImageUrl = nft.imgUrl;
   const nftName = nft.name;
   const nftNumber = nft.number;
   const nftPrice = nft.monthlyPrice;
   const state = nft.state;
   const nftAddress = nft.address;
 
+  const { uri: nftImageUrl, id } = nft;
+
   const navigate = useNavigate();
-  const navigationHandler = (address) => {
-    navigate(generatePath("/:id", { id: address }));
+  const navigationHandler = () => {
+    navigate(generatePath("/:id", { id: id._hex }));
   };
 
   return (
     <div className={styles.card}>
       <div className={styles.picture}>
-        <a onClick={() => navigationHandler(nftAddress)}>
+        <a onClick={() => navigationHandler()}>
           <img className={styles.image} src={nftImageUrl} alt={nftName} />
         </a>
         {state == "rented" && <div className={styles.tooltip}>Renting</div>}
@@ -52,7 +55,7 @@ export const NFTCard = ({ nft }) => {
             </div>
           </>
         )}
-        {state == "yours" && <SubmitForRent nft={nft} />}
+        {status == "rentable" && <SubmitForRent nft={nft} />}
         {state == "rentable" && <Rent nft={nft} />}
       </div>
     </div>
