@@ -10,6 +10,8 @@ interface IERC721Rent {
         uint256         pricePerSecond;
         uint256         collateralPerSecond;
         uint256         currentRentingToken;
+        address         sourceERC721Contract;
+        uint256         sourceTokenId;
     }
 
     enum RentStatus{ UNKNOWN, STARTED, FINISHED, COLLATERAL_ASSIGNED }

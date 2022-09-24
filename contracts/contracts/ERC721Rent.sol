@@ -48,7 +48,7 @@ contract ERC721Rent is ERC721, IERC721Rent {
         require(erc721Contract.ownerOf(tokenId) == msg.sender, "not owner");
         require(_rentConditions[address(erc721Contract)][tokenId].currentRentingToken == 0, "cant change while rented");
         
-        _rentConditions[address(erc721Contract)][tokenId] = RentConditions(allow, pricePerSecond, collateralPerSecond, 0);
+        _rentConditions[address(erc721Contract)][tokenId] = RentConditions(allow, pricePerSecond, collateralPerSecond, 0, address(erc721Contract), tokenId);
         if (_sourceTokenIdArrayPos[address(erc721Contract)][tokenId] == 0) {
             _sourceTokenIdArrayPos[address(erc721Contract)][tokenId] = _sourceTokenIdArray.length + 1;
             _sourceTokenIdArray.push(_SourceTokenId(address(erc721Contract), tokenId));
