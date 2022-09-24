@@ -31,15 +31,23 @@ export const UserNFTs: FC = () => {
     const transaction = await contract.listTokens();
     const transaction2 = await contract2.listRentConditions();
 
-    console.log();
-
     const data = await transaction;
     const data2 = await transaction2;
 
-    console.log(data, data2);
+    const ownedAndRentable = data.filter((elem) => {
+      const tokenIsOwned = contract.ownerOf(elem.id._hex).then();
+      return tokenIsOwned;
+    });
 
-    setNfts(data);
-    setRentedNfts(data2);
+    const notOwnedAndAllowed = data2.filter((elem) => {
+      const tokenIsOwned = contract
+        .ownerOf(elem.currentRentingToken._hex)
+        .then();
+      return !tokenIsOwned;
+    });
+
+    setNfts(ownedAndRentable);
+    setRentedNfts(notOwnedAndAllowed);
   };
 
   useEffect(() => {
