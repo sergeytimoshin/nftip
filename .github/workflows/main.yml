@@ -21,13 +21,13 @@ jobs:
     - name: Use node
       uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 16.x
     - name: Build frontend
       run: |
            cp -r contracts/typechain-types frontend/src
            cd frontend
            npm install
-           npm build
+           npm run build
         
     - name: Deploy static
       run: aws s3 sync ./frontend/build/ s3://nftip.mirror-ai.com --delete
