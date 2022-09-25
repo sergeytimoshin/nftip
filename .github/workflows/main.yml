@@ -27,7 +27,7 @@ jobs:
            cp -r contracts/typechain-types frontend/src
            cd frontend
            npm install
-           npm run build
+           CI=false npm run build
         
     - name: Deploy static
       run: aws s3 sync ./frontend/build/ s3://nftip.mirror-ai.com --delete
