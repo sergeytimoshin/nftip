@@ -22,6 +22,11 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 14.x
+    - name: Build contracts
+      run: |
+           cd contracts
+           npm install
+           npx hardhat compile
     - name: Build frontend
       run: |
            cp -r contracts/typechain-types frontend/src
